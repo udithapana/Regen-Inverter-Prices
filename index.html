@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Regen Inverter Prices</title>
+<meta name="theme-color" content="#16213a">
+<meta name="description" content="Regen Renewables inverter price list — updated by Procurement, visible to all teams">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{
+  --navy:#16213a; --navy2:#22325a; --accent:#f59e0b; --green:#16a34a; --red:#dc2626; --orange:#ea580c; --blue:#2563eb;
+  --bg:#f4f5f7; --card:#fff; --ink:#111827; --mute:#6b7280; --line:#e5e7eb; --soft:#f9fafb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+header{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;padding:calc(8px + env(safe-area-inset-top)) 14px 0}
+.hrow{display:flex;align-items:center;gap:10px;max-width:1100px;margin:0 auto}
+.logo{width:36px;height:36px;border-radius:9px;background:#fff;display:grid;place-items:center;flex:none;overflow:hidden}
+.logo img{width:32px}
+.ttl{flex:1;min-width:0}
+.ttl b{display:block;font-size:17px}
+.ttl small{opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.hbtn{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:10px;padding:8px 11px;cursor:pointer;flex:none}
+.hbtn:hover{background:rgba(255,255,255,.22)}
+.tabs{display:flex;gap:4px;max-width:1100px;margin:8px auto 0}
+.tab{background:none;border:0;color:#c9d1e3;padding:9px 12px;border-bottom:3px solid transparent;cursor:pointer;font-weight:600}
+.tab.on{color:#fff;border-color:var(--accent)}
+main{max-width:1100px;margin:0 auto;padding:12px 12px 110px}
+.note{background:#fff7e6;border:1px solid #fde3a7;border-radius:12px;padding:9px 12px;display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;font-size:14px}
+.note span{flex:1}
+.note span:first-child{flex:none}
+.linkbtn{background:none;border:0;color:var(--blue);cursor:pointer;padding:0;font-weight:600}
+.stats{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px}
+.stat{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px;white-space:nowrap}
+.stat b{font-size:15px;margin-right:3px}
+.stat.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tools{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+.search{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters select{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;max-width:100%}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff}
+.btn.sec{background:#fff;color:var(--navy);border:1px solid #cfd5e3}
+.btn.acc{background:var(--accent);color:#1b1300}
+.btn.red{background:#fff;color:var(--red);border:1px solid #f4c7c7}
+.btn:disabled{opacity:.5;cursor:default}
+.group{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.ghead{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--soft);cursor:pointer;user-select:none}
+.ghead b{flex:1}
+.ghead small{color:var(--mute)}
+.chev{transition:transform .15s;color:var(--mute)}
+.group.closed .chev{transform:rotate(-90deg)}
+.group.closed .rows{display:none}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 14px;border-top:1px solid var(--line);cursor:pointer}
+.row:hover{background:#fafbff}
+.row.off{opacity:.55}
+.model{font-weight:600;word-break:break-word}
+.meta{color:var(--mute);font-size:13px}
+.price{font-weight:700;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.price.none{color:#9ca3af;font-weight:500}
+.sub{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:12.5px;color:var(--mute)}
+.badge{display:inline-block;border-radius:6px;padding:1px 6px;font-size:11.5px;font-weight:700;letter-spacing:.2px}
+.b-new{background:#dcfce7;color:#166534}.b-old{background:#fee2e2;color:#991b1b}.b-exp{background:#ffedd5;color:#9a3412}
+.b-stock{background:#e0e7ff;color:#3730a3}.b-out{background:#f3f4f6;color:#374151}.b-hid{background:#374151;color:#fff}
+.b-up{color:var(--red)}.b-down{color:var(--green)}
+.pinput{width:140px;padding:8px 10px;border:1px solid #cfd5e3;border-radius:9px;text-align:right;font-variant-numeric:tabular-nums}
+.pinput.chg{border-color:var(--accent);background:#fffbeb;box-shadow:0 0 0 2px #fde68a}
+.empty{text-align:center;color:var(--mute);padding:40px 10px}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--navy);color:#fff;padding:12px 14px calc(12px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center;justify-content:center;box-shadow:0 -4px 16px rgba(0,0,0,.18)}
+.bar span{flex:1;max-width:600px}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:11;background:var(--accent);color:#1b1300;border:0;border-radius:16px;padding:14px 18px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.2);cursor:pointer}
+dialog{border:0;border-radius:16px;padding:0;width:min(560px,96vw);max-height:92vh;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(15,23,42,.55)}
+.dh{display:flex;align-items:flex-start;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:1}
+.dh h3{margin:0;flex:1;font-size:17px;word-break:break-word}
+.dh small{display:block;color:var(--mute);font-weight:400;font-size:13px}
+.x{background:none;border:0;font-size:22px;line-height:1;cursor:pointer;color:var(--mute);padding:2px 6px}
+.db{padding:14px 16px}
+.big{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0;font-size:14px}
+.kv dt{color:var(--mute)}
+.kv dd{margin:0}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute);font-weight:600}
+.form .full{grid-column:1/-1}
+.form input,.form select,.form textarea{padding:10px;border:1px solid #cfd5e3;border-radius:10px;background:#fff;color:var(--ink);font-weight:400}
+.form textarea{min-height:60px;resize:vertical}
+.chk{flex-direction:row!important;align-items:center;gap:8px!important}
+.hint{font-size:12.5px;color:var(--mute);margin:4px 0 0}
+.df{display:flex;gap:8px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--line);position:sticky;bottom:0;background:#fff}
+h4{margin:16px 0 6px;font-size:14px}
+.hist{list-style:none;margin:0;padding:0;font-size:13.5px}
+.hist li{padding:7px 0;border-bottom:1px dashed var(--line)}
+.hist small{color:var(--mute);display:block}
+.day{margin:14px 0 6px;font-weight:700;color:var(--mute);font-size:13px;text-transform:uppercase;letter-spacing:.4px}
+.ch{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:6px;cursor:pointer}
+.ch small{color:var(--mute)}
+.login{max-width:420px;margin:30px auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
+.login h2{margin:6px 0 2px}
+.login p{color:var(--mute);margin:0 0 14px}
+.login .form{grid-template-columns:1fr}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:#111827;color:#fff;padding:10px 16px;border-radius:12px;z-index:50;max-width:92vw;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:14px}
+.toast.err{background:var(--red)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}
+@keyframes s{to{transform:rotate(360deg)}}
+footer{max-width:1100px;margin:0 auto;padding:0 14px 90px;color:var(--mute);font-size:12px;text-align:center}
+#printArea{display:none}
+@media (min-width:760px){
+  .tools{grid-template-columns:1fr auto}
+  .row{grid-template-columns:minmax(220px,1.4fr) 1.6fr auto;align-items:center}
+  .sub{grid-column:auto}
+  .row .price{grid-column:3;grid-row:1}
+}
+@media print{
+  header,main,footer,.fab,.bar,dialog,.toast{display:none!important}
+  body{background:#fff}
+  #printArea{display:block;font-size:10.5px}
+  #printArea table{width:100%;border-collapse:collapse}
+  #printArea th,#printArea td{border:1px solid #bbb;padding:3px 5px;text-align:left}
+  #printArea td.n{text-align:right}
+  #printArea thead{display:table-header-group}
+  #printArea .pn{margin-top:10px;font-size:9px;color:#333}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="logo"><img src="regen-logo.png" alt="Regen"></div>
+    <div class="ttl"><b>Inverter Prices</b><small id="who">Regen Renewables</small></div>
+    <button class="hbtn hidden" id="refreshBtn" title="Reload prices">⟳</button>
+    <button class="hbtn hidden" id="menuBtn" title="Account">☰</button>
+  </div>
+  <nav class="tabs hidden" id="tabs">
+    <button class="tab on" data-tab="list">Price list</button>
+    <button class="tab" data-tab="recent">Recent changes</button>
+  </nav>
+</header>
+
+<main>
+  <!-- sign in -->
+  <section id="loginView" class="login hidden">
+    <h2>Sign in</h2>
+    <p>Procurement updates the prices. All other teams can view them.</p>
+    <form class="form" id="loginForm" autocomplete="on">
+      <label>Your name<input id="lName" required maxlength="60" autocomplete="name" placeholder="e.g. Kasun Perera"></label>
+      <label>Team<select id="lTeam"></select></label>
+      <label>Team key<input id="lKey" required autocomplete="current-password" type="password" placeholder="Key from the Design Head / Procurement"></label>
+      <label id="lApiWrap">Server link (Apps Script web app /exec URL)<input id="lApi" type="url" placeholder="https://script.google.com/macros/s/…/exec"></label>
+      <button class="btn" id="loginBtn" type="submit">Sign in</button>
+    </form>
+  </section>
+
+  <!-- price list -->
+  <section id="listView" class="hidden">
+    <div class="note"><span>ℹ️</span><span id="noteText"></span><button class="linkbtn proc hidden" id="noteEdit">Edit</button></div>
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <input class="search" id="q" type="search" placeholder="Search brand, model, kW, supplier…">
+      <div class="filters">
+        <select id="fBrand"><option value="">All brands</option></select>
+        <select id="fCat"><option value="">All types</option></select>
+        <select id="fPhase"><option value="">1 &amp; 3 phase</option><option value="1">Single phase</option><option value="3">Three phase</option></select>
+        <select id="fSort">
+          <option value="brand">Sort: brand, kW</option>
+          <option value="pAsc">Price: low → high</option>
+          <option value="pDesc">Price: high → low</option>
+          <option value="upd">Recently updated</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn sec proc hidden" id="bulkBtn">✎ Bulk price edit</button>
+      <button class="btn sec proc hidden" id="syncBtn">⇄ Sync from SLD tool</button>
+      <label class="btn sec proc hidden" style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" id="showHidden"> Show hidden</label>
+      <button class="btn sec" id="csvBtn">⬇ Excel (CSV)</button>
+      <button class="btn sec" id="printBtn">🖨 Print / PDF</button>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <!-- recent changes -->
+  <section id="recentView" class="hidden">
+    <div class="filters" style="margin-bottom:6px">
+      <select id="rKind"><option value="price">Price changes only</option><option value="all">All changes</option></select>
+    </div>
+    <div id="recent"></div>
+  </section>
+</main>
+<footer id="foot"></footer>
+
+<button class="fab proc hidden" id="addBtn">＋ Add inverter</button>
+<div class="bar hidden" id="bulkBar"><span id="bulkInfo">No changes yet</span><button class="btn sec" id="bulkCancel">Cancel</button><button class="btn acc" id="bulkSave" disabled>Save all</button></div>
+
+<dialog id="dlg"><div id="dlgBody"></div></dialog>
+<input type="file" id="sldFile" accept=".js,.json,.html,text/javascript,application/json,text/html" class="hidden">
+<datalist id="brandList"></datalist>
+<datalist id="supplierList"></datalist>
+<div id="printArea"></div>
+
+<script>
+/* =========================================================
+   CONFIG — paste your Apps Script web app /exec link here once
+   (or leave blank and enter it on the sign-in screen).
+   ========================================================= */
+const API_URL_DEFAULT = 'https://script.google.com/macros/s/AKfycbxYZQk9RG5pGoYSSxBGr3zEcSSqEsujIlWovhqAwDZE12ZhzoTpgeJ5cZXodSrCCOi1Cw/exec';
+// Where the SLD tool lives on the same github.io site. "Sync from SLD tool" reads the inverter list
+// from both files (whichever is newer has the most models) and joins them.
+const SLD_SOURCES = ['../SLD-Genarator/inverter-data.js', '../SLD-Genarator/index.html'];
+const NEW_DAYS = 7;      // "NEW" badge: price changed within this many days
+const OLD_DAYS = 90;     // "OLD" badge: price not updated for this many days
+
+/* ---- storage: only this app's own keys (all apps share udithapana.github.io) ---- */
+const LS = { auth: 'rip_auth', api: 'rip_api', cache: 'rip_cache', open: 'rip_open', filt: 'rip_filters' };
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+
+const TEAMS = ['Sales', 'Design', 'Procurement', 'Management', 'Finance', 'Operations', 'Other'];
+const CATEGORIES = ['On-grid', 'Hybrid', 'BESS', 'Other'];
+const STOCK = ['', 'In stock', 'Limited stock', 'Order basis', 'Out of stock'];
+const FIELD_LABEL = { PriceLKR: 'Price', ValidUntil: 'Valid until', kW: 'kW', Phase: 'Phase', Active: 'Visible', Stock: 'Stock', Supplier: 'Supplier', Remarks: 'Remarks', Brand: 'Brand', Model: 'Model', Category: 'Type', Added: 'Added', 'Price note': 'Price note' };
+
+const S = { api: '', auth: null, user: null, items: [], recent: [], note: '', tab: 'list', bulk: false, edits: {}, filter: '', loading: false };
+const $ = id => document.getElementById(id);
+const esc = s => String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const isProc = () => S.user && S.user.role === 'procurement';
+const money = v => v === '' || v === null || v === undefined || isNaN(v) ? '' : 'Rs ' + Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 });
+const today = () => new Date(Date.now() + 330 * 6e4).toISOString().slice(0, 10);
+const daysAgo = iso => iso ? (Date.now() - Date.parse(iso)) / 864e5 : Infinity;
+function ago(iso) {
+  if (!iso) return '';
+  const d = daysAgo(iso);
+  if (d < 1 / 24) return 'just now';
+  if (d < 1) return Math.round(d * 24) + ' h ago';
+  if (d < 45) return Math.round(d) + ' d ago';
+  if (d < 365) return Math.round(d / 30) + ' mo ago';
+  return (d / 365).toFixed(1) + ' y ago';
+}
+const fmtDate = iso => iso ? new Date(iso).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Colombo' }) : '';
+const notice = () => `© ${new Date().getFullYear()} Regen Renewables (Pvt) Ltd. All rights reserved. This document is confidential and is the property of Regen Renewables (Pvt) Ltd. It must not be copied, reproduced or disclosed to any third party without written consent.`;
+
+function toast(msg, err) {
+  const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), err ? 5200 : 2800);
+}
+
+/* ---------------- server ---------------- */
+async function call(action, data = {}) {
+  if (!S.api) throw new Error('Server link is not set');
+  const body = Object.assign({ action }, S.auth, data);
+  let res;
+  try {
+    res = await fetch(S.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  } catch (e) { throw new Error('No connection to the server. Check your internet.'); }
+  let j; try { j = await res.json(); } catch (e) { throw new Error('Server reply was not readable (is the /exec link right?)'); }
+  if (!j.ok) {
+    if (/wrong team key/i.test(j.error) && action !== 'login') { signOut(true); }
+    throw new Error(j.error || 'Server error');
+  }
+  return j;
+}
+
+/* ---------------- sign in ---------------- */
+function initLogin() {
+  $('lTeam').innerHTML = TEAMS.map(t => `<option>${t}</option>`).join('');
+  const a = store.get(LS.auth, null);
+  if (a) { $('lName').value = a.name || ''; $('lTeam').value = a.team || 'Sales'; }
+  $('lApi').value = S.api || '';
+  $('lApiWrap').classList.toggle('hidden', !!API_URL_DEFAULT && !store.get(LS.api, ''));
+  $('loginForm').onsubmit = async e => {
+    e.preventDefault();
+    const api = ($('lApi').value || '').trim() || API_URL_DEFAULT;
+    if (!/^https:\/\/script\.google(usercontent)?\.com\/.+\/exec/.test(api) && !/^http:\/\/(localhost|127\.0\.0\.1)/.test(api)) return toast('Paste the Apps Script web app link that ends with /exec', true);
+    S.api = api;
+    S.auth = { name: $('lName').value.trim(), team: $('lTeam').value, key: $('lKey').value.trim() };
+    const b = $('loginBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Signing in…';
+    try {
+      const r = await call('login');
+      S.user = r.user;
+      if (api !== API_URL_DEFAULT) store.set(LS.api, api); else store.del(LS.api);
+      store.set(LS.auth, S.auth);
+      $('lKey').value = '';
+      startApp();
+    } catch (err) { toast(err.message, true); }
+    finally { b.disabled = false; b.textContent = 'Sign in'; }
+  };
+}
+function signOut(silent) {
+  store.del(LS.auth); store.del(LS.cache);
+  S.user = null; S.auth = null; S.items = []; S.bulk = false; S.edits = {};
+  show('login');
+  if (silent) toast('The team key has changed. Please sign in again.', true);
+}
+
+function show(view) {
+  const logged = view !== 'login';
+  $('loginView').classList.toggle('hidden', logged);
+  $('tabs').classList.toggle('hidden', !logged);
+  $('refreshBtn').classList.toggle('hidden', !logged);
+  $('menuBtn').classList.toggle('hidden', !logged);
+  $('listView').classList.toggle('hidden', !logged || S.tab !== 'list');
+  $('recentView').classList.toggle('hidden', !logged || S.tab !== 'recent');
+  document.querySelectorAll('.proc').forEach(el => el.classList.toggle('hidden', !logged || !isProc() || (S.tab !== 'list' && el.id === 'addBtn') || (S.bulk && el.id === 'addBtn')));
+  $('bulkBar').classList.toggle('hidden', !S.bulk || S.tab !== 'list');
+  $('who').textContent = logged && S.user ? `${S.user.name} · ${S.user.team}${isProc() ? ' (can edit)' : ' (view only)'}` : 'Regen Renewables';
+  if (!logged) initLogin();
+}
+
+function startApp() {
+  S.user = S.user || { name: S.auth.name, team: S.auth.team, role: 'viewer' };
+  const f = store.get(LS.filt, {});
+  ['fBrand', 'fCat', 'fPhase', 'fSort'].forEach(id => { if (f[id] !== undefined) $(id).dataset.want = f[id]; });
+  const c = store.get(LS.cache, null);
+  if (c && c.items) { S.items = c.items; S.note = c.note || ''; S.recent = c.recent || []; render(); }
+  show('app');
+  load();
+}
+
+async function load(quiet) {
+  if (S.loading) return; S.loading = true;
+  const rb = $('refreshBtn'); rb.innerHTML = '<span class="spin"></span>';
+  try {
+    const [l, r, me] = await Promise.all([call('list'), call('recent'), call('login')]);
+    S.user = me.user; S.items = l.items; S.note = l.note; S.recent = r.rows;
+    store.set(LS.cache, { items: S.items, note: S.note, recent: S.recent, time: l.time });
+    render(); show('app');
+  } catch (e) { if (!quiet) toast(e.message, true); }
+  finally { S.loading = false; rb.textContent = '⟳'; }
+}
+
+/* ---------------- price list ---------------- */
+function lastPriceChange() {
+  const m = {};
+  S.recent.forEach(h => { if (h.ID && !m[h.ID] && (h.Field === 'PriceLKR' || (h.Field === 'Added' && h.New !== ''))) m[h.ID] = h; });
+  return m;
+}
+function flags(it) {
+  const f = {};
+  const pc = it._pc;
+  f.priced = it.PriceLKR !== '' && it.PriceLKR !== null;
+  f.isNew = !!(pc && daysAgo(pc.Time) <= NEW_DAYS);
+  f.old = f.priced && daysAgo(pc ? pc.Time : it.UpdatedAt) > OLD_DAYS;
+  f.expired = !!(it.ValidUntil && it.ValidUntil < today());
+  return f;
+}
+function fillSelect(id, values, label) {
+  const el = $(id), cur = el.value || el.dataset.want || '';
+  el.innerHTML = `<option value="">${label}</option>` + values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  el.value = values.includes(cur) ? cur : ''; delete el.dataset.want;
+}
+
+function render() {
+  if (S.tab === 'recent') return renderRecent();
+  const pc = lastPriceChange();
+  S.items.forEach(it => it._pc = pc[it.ID]);
+  const vis = S.items.filter(it => it.Active || ($('showHidden').checked && isProc()));
+  const brands = [...new Set(S.items.map(i => i.Brand))].sort((a, b) => a.localeCompare(b));
+  fillSelect('fBrand', brands, 'All brands');
+  fillSelect('fCat', CATEGORIES.filter(c => S.items.some(i => i.Category === c)), 'All types');
+  if ($('fPhase').dataset.want !== undefined) { $('fPhase').value = $('fPhase').dataset.want; delete $('fPhase').dataset.want; }
+  if ($('fSort').dataset.want !== undefined) { $('fSort').value = $('fSort').dataset.want || 'brand'; delete $('fSort').dataset.want; }
+  $('brandList').innerHTML = brands.map(b => `<option value="${esc(b)}">`).join('');
+  $('supplierList').innerHTML = [...new Set(S.items.map(i => i.Supplier).filter(Boolean))].sort().map(b => `<option value="${esc(b)}">`).join('');
+  $('noteText').textContent = S.note || 'Prices in LKR.';
+  $('foot').textContent = notice();
+
+  // stats
+  const st = { all: vis.length, priced: 0, none: 0, isNew: 0, old: 0, expired: 0 };
+  vis.forEach(it => { const f = flags(it); f.priced ? st.priced++ : st.none++; if (f.isNew) st.isNew++; if (f.old) st.old++; if (f.expired) st.expired++; });
+  const chips = [['', st.all, 'models'], ['priced', st.priced, 'priced'], ['none', st.none, 'no price'], ['new', st.isNew, `updated ≤${NEW_DAYS} d`], ['old', st.old, `older than ${OLD_DAYS} d`], ['expired', st.expired, 'validity over']];
+  $('stats').innerHTML = chips.filter(c => c[0] === '' || c[1] > 0 || S.filter === c[0]).map(c => `<button class="stat ${S.filter === c[0] ? 'on' : ''}" data-f="${c[0]}"><b>${c[1]}</b>${c[2]}</button>`).join('');
+
+  // filter
+  const q = $('q').value.trim().toLowerCase(), fb = $('fBrand').value, fc = $('fCat').value, fp = $('fPhase').value, so = $('fSort').value;
+  let rows = vis.filter(it => {
+    if (fb && it.Brand !== fb) return false;
+    if (fc && it.Category !== fc) return false;
+    if (fp && String(it.Phase) !== fp) return false;
+    const f = flags(it);
+    if (S.filter === 'priced' && !f.priced) return false;
+    if (S.filter === 'none' && f.priced) return false;
+    if (S.filter === 'new' && !f.isNew) return false;
+    if (S.filter === 'old' && !f.old) return false;
+    if (S.filter === 'expired' && !f.expired) return false;
+    if (q) {
+      const hay = `${it.Brand} ${it.Model} ${it.kW}kw ${it.kW} kw ${it.Category} ${it.Supplier} ${it.Remarks} ${it.Phase == 1 ? 'single 1ph' : 'three 3ph'}`.toLowerCase();
+      if (!q.split(/\s+/).every(w => hay.includes(w))) return false;
+    }
+    return true;
+  });
+  const num = v => v === '' || v === null ? null : Number(v);
+  const byBrand = (a, b) => a.Brand.localeCompare(b.Brand) || (num(a.kW) || 0) - (num(b.kW) || 0) || a.Model.localeCompare(b.Model);
+  if (so === 'pAsc' || so === 'pDesc') rows.sort((a, b) => { const x = num(a.PriceLKR), y = num(b.PriceLKR); if (x === null && y === null) return byBrand(a, b); if (x === null) return 1; if (y === null) return -1; return so === 'pAsc' ? x - y : y - x; });
+  else if (so === 'upd') rows.sort((a, b) => String(b.UpdatedAt || '').localeCompare(String(a.UpdatedAt || '')) || byBrand(a, b));
+  else rows.sort(byBrand);
+  S.shown = rows;
+
+  if (!rows.length) { $('list').innerHTML = `<div class="empty">${S.items.length ? 'No inverters match these filters.' : 'Loading the price list…'}</div>`; return; }
+  const open = store.get(LS.open, {});
+  const grouped = so === 'brand' && !S.bulk;
+  if (grouped) {
+    const g = {}; rows.forEach(r => (g[r.Brand] = g[r.Brand] || []).push(r));
+    const many = Object.keys(g).length > 1 && !q;
+    $('list').innerHTML = Object.keys(g).map(b => {
+      const list = g[b], priced = list.filter(i => flags(i).priced).length;
+      const closed = many && open[b] === false;
+      return `<div class="group ${closed ? 'closed' : ''}" data-brand="${esc(b)}"><div class="ghead"><span class="chev">▾</span><b>${esc(b)}</b><small>${list.length} model${list.length > 1 ? 's' : ''} · ${priced} priced</small></div><div class="rows">${list.map(it => rowHtml(it)).join('')}</div></div>`;
+    }).join('');
+  } else {
+    $('list').innerHTML = `<div class="group"><div class="rows">${rows.map(it => rowHtml(it, true)).join('')}</div></div>`;
+  }
+}
+
+function rowHtml(it, withBrand) {
+  const f = flags(it), pc = it._pc;
+  let trend = '';
+  if (pc && pc.Old !== '' && pc.New !== '' && !isNaN(pc.Old) && !isNaN(pc.New) && Number(pc.Old) !== Number(pc.New)) {
+    const up = Number(pc.New) > Number(pc.Old);
+    trend = `<span class="${up ? 'b-up' : 'b-down'}" title="Before: ${esc(money(pc.Old))}">${up ? '▲' : '▼'} from ${esc(money(pc.Old))}</span>`;
+  }
+  const stock = it.Stock ? `<span class="badge ${it.Stock === 'Out of stock' ? 'b-out' : 'b-stock'}">${esc(it.Stock)}</span>` : '';
+  const badges = (f.isNew ? '<span class="badge b-new">NEW PRICE</span>' : '') + (f.old ? `<span class="badge b-old" title="Price not updated for over ${OLD_DAYS} days">OLD PRICE</span>` : '') +
+                 (f.expired ? '<span class="badge b-exp">VALIDITY OVER</span>' : '') + (!it.Active ? '<span class="badge b-hid">HIDDEN</span>' : '');
+  const upd = (pc || it.UpdatedBy) ? `<span>Updated ${esc(ago(pc ? pc.Time : it.UpdatedAt))}${(pc ? pc.By : it.UpdatedBy) ? ' by ' + esc(pc ? pc.By : it.UpdatedBy) : ''}</span>` : '';
+  let price;
+  if (S.bulk) {
+    const v = S.edits[it.ID] !== undefined ? S.edits[it.ID] : (it.PriceLKR === '' ? '' : it.PriceLKR);
+    price = `<input class="pinput ${S.edits[it.ID] !== undefined ? 'chg' : ''}" inputmode="decimal" data-id="${esc(it.ID)}" value="${esc(v)}" placeholder="Price (LKR)" aria-label="Price for ${esc(it.Model)}">`;
+  } else price = f.priced ? `<div class="price">${esc(money(it.PriceLKR))}</div>` : '<div class="price none">No price</div>';
+  return `<div class="row ${it.Active ? '' : 'off'}" data-id="${esc(it.ID)}">
+    <div><div class="model">${withBrand ? `<span class="meta">${esc(it.Brand)} · </span>` : ''}${esc(it.Model)}</div>
+    <div class="meta">${it.kW !== '' ? esc(it.kW) + ' kW · ' : ''}${it.Phase == 1 ? '1-phase' : '3-phase'} · ${esc(it.Category)}</div></div>
+    ${price}
+    <div class="sub">${badges}${stock}${it.Supplier ? `<span>${esc(it.Supplier)}</span>` : ''}${trend}${upd}${it.ValidUntil ? `<span>Valid to ${esc(it.ValidUntil)}</span>` : ''}</div>
+  </div>`;
+}
+
+/* ---------------- detail / edit ---------------- */
+const dlg = $('dlg');
+function openDlg(html) { $('dlgBody').innerHTML = html; if (!dlg.open) dlg.showModal(); }
+function closeDlg() { if (dlg.open) dlg.close(); }
+dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('.x')) closeDlg(); });
+
+function formHtml(it) {
+  const o = (list, v) => list.map(x => `<option ${x === v ? 'selected' : ''} value="${esc(x)}">${esc(x || '—')}</option>`).join('');
+  return `<form class="form" id="itemForm">
+    <label>Brand<input name="Brand" list="brandList" required value="${esc(it.Brand || '')}" placeholder="Pick or type a new brand"></label>
+    <label>Model<input name="Model" required value="${esc(it.Model || '')}"></label>
+    <label>Type<select name="Category">${o(CATEGORIES, it.Category || 'On-grid')}</select></label>
+    <label>Phase<select name="Phase"><option value="3" ${it.Phase != 1 ? 'selected' : ''}>Three phase</option><option value="1" ${it.Phase == 1 ? 'selected' : ''}>Single phase</option></select></label>
+    <label>Rated power (kW)<input name="kW" type="number" step="any" min="0" value="${esc(it.kW === undefined ? '' : it.kW)}"></label>
+    <label>Price (LKR)<input name="PriceLKR" inputmode="decimal" value="${esc(it.PriceLKR === undefined ? '' : it.PriceLKR)}" placeholder="e.g. 1250000"></label>
+    <label>Supplier<input name="Supplier" list="supplierList" value="${esc(it.Supplier || '')}"></label>
+    <label>Stock<select name="Stock">${o(STOCK, it.Stock || '')}</select></label>
+    <label>Price valid until<input name="ValidUntil" type="date" value="${esc(it.ValidUntil || '')}"></label>
+    <label class="chk" style="align-self:end"><input type="checkbox" name="Hidden" ${it.Active === false ? 'checked' : ''}> Hide (discontinued)</label>
+    <label class="full">Remarks<textarea name="Remarks" maxlength="300" placeholder="Warranty, lead time, USD cost, etc.">${esc(it.Remarks || '')}</textarea></label>
+  </form>`;
+}
+function readForm() {
+  const f = $('itemForm'), d = {};
+  ['Brand', 'Model', 'Category', 'Phase', 'kW', 'PriceLKR', 'Supplier', 'Stock', 'ValidUntil', 'Remarks'].forEach(n => d[n] = f.elements[n].value.trim());
+  d.PriceLKR = d.PriceLKR.replace(/[, ]|rs\.?/gi, '');
+  d.Active = !f.elements.Hidden.checked;
+  if (!d.Brand || !d.Model) throw new Error('Brand and model are required');
+  if (d.PriceLKR !== '' && !(Number(d.PriceLKR) >= 0)) throw new Error('Price must be a number');
+  return d;
+}
+
+async function openItem(id) {
+  const it = S.items.find(i => i.ID === id); if (!it) return;
+  const f = flags(it);
+  const head = `<div class="dh"><h3>${esc(it.Model)}<small>${esc(it.Brand)} · ${it.kW !== '' ? esc(it.kW) + ' kW · ' : ''}${it.Phase == 1 ? 'single phase' : 'three phase'} · ${esc(it.Category)}</small></h3><button class="x" aria-label="Close">×</button></div>`;
+  const view = `<div class="big">${f.priced ? esc(money(it.PriceLKR)) : '<span style="color:#9ca3af">No price yet</span>'}</div>
+    <dl class="kv">
+      <dt>Supplier</dt><dd>${esc(it.Supplier || '—')}</dd>
+      <dt>Stock</dt><dd>${esc(it.Stock || '—')}</dd>
+      <dt>Valid until</dt><dd>${esc(it.ValidUntil || '—')}${f.expired ? ' <span class="badge b-exp">OVER</span>' : ''}</dd>
+      <dt>Remarks</dt><dd>${esc(it.Remarks || '—')}</dd>
+      <dt>Last update</dt><dd>${it.UpdatedAt ? esc(fmtDate(it.UpdatedAt)) + (it.UpdatedBy ? ' · ' + esc(it.UpdatedBy) : '') : '—'}</dd>
+    </dl>`;
+  const histBox = `<h4>Price history</h4><ul class="hist" id="histList"><li><span class="spin"></span> Loading…</li></ul>`;
+  if (isProc()) {
+    openDlg(`${head}<div class="db">${formHtml(it)}<p class="hint">Last update: ${it.UpdatedAt ? esc(fmtDate(it.UpdatedAt)) + ' · ' + esc(it.UpdatedBy || '') : 'never'}</p>${histBox}</div>
+      <div class="df"><button class="btn sec" type="button" id="cancelBtn">Cancel</button><button class="btn" id="saveBtn">Save</button></div>`);
+    $('cancelBtn').onclick = closeDlg;
+    $('saveBtn').onclick = async () => {
+      let d; try { d = readForm(); } catch (e) { return toast(e.message, true); }
+      d.ID = it.ID; d.base = it.UpdatedAt || '';
+      const b = $('saveBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Saving…';
+      try {
+        const r = await call('save', { item: d });
+        Object.assign(it, r.item); closeDlg(); toast('Saved'); load(true);
+      } catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Save'; }
+    };
+    setTimeout(() => { const p = $('itemForm') && $('itemForm').elements.PriceLKR; if (p && matchMedia('(min-width:760px)').matches) p.focus(); }, 50);
+  } else openDlg(`${head}<div class="db">${view}${histBox}</div>`);
+  try {
+    const r = await call('history', { id: it.ID });
+    const el = $('histList'); if (!el) return;
+    el.innerHTML = r.rows.length ? r.rows.map(h => `<li>${histText(h, true)}<small>${esc(fmtDate(h.Time))} · ${esc(h.By)}</small></li>`).join('') : '<li>No changes recorded yet.</li>';
+  } catch (e) { const el = $('histList'); if (el) el.innerHTML = `<li>${esc(e.message)}</li>`; }
+}
+
+function histText(h, short) {
+  const name = short ? '' : `<b>${esc(h.Brand)} ${esc(h.Model)}</b>: `;
+  const val = (f, v) => f === 'PriceLKR' ? (v === '' ? 'no price' : esc(money(v))) : f === 'Active' ? (String(v) === 'true' ? 'visible' : 'hidden') : f === 'Phase' ? (v == 1 ? '1-phase' : '3-phase') : (v === '' ? '—' : esc(v));
+  if (h.Field === 'Added') return `${name}added to the list${h.New !== '' ? ' at ' + esc(money(h.New)) : ''}`;
+  if (h.Field === 'Price note') return `Price note changed to “${esc(h.New)}”`;
+  if (h.Field === 'Active') return `${name}${String(h.New) === 'true' ? 'shown again' : 'hidden (discontinued)'}`;
+  return `${name}${esc(FIELD_LABEL[h.Field] || h.Field)} ${val(h.Field, h.Old)} → <b>${val(h.Field, h.New)}</b>`;
+}
+
+function openAdd() {
+  openDlg(`<div class="dh"><h3>Add inverter<small>Type a new brand name to add a new brand.</small></h3><button class="x" aria-label="Close">×</button></div>
+    <div class="db">${formHtml({ Category: 'On-grid', Phase: 3 })}</div>
+    <div class="df"><button class="btn sec" type="button" id="cancelBtn">Cancel</button><button class="btn" id="saveBtn">Add</button></div>`);
+  $('cancelBtn').onclick = closeDlg;
+  $('saveBtn').onclick = async () => {
+    let d; try { d = readForm(); } catch (e) { return toast(e.message, true); }
+    const known = S.items.find(i => i.Brand.toLowerCase() === d.Brand.toLowerCase());
+    if (known) d.Brand = known.Brand;   // keep one spelling per brand
+    const b = $('saveBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Adding…';
+    try {
+      const r = await call('add', { item: d });
+      S.items.push(r.item); closeDlg(); toast(`${r.item.Brand} ${r.item.Model} added`); render(); load(true);
+    } catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Add'; }
+  };
+}
+
+/* ---------------- bulk price edit ---------------- */
+function setBulk(on) {
+  S.bulk = on; S.edits = {};
+  $('bulkBtn').textContent = on ? '✕ Leave bulk edit' : '✎ Bulk price edit';
+  bulkInfo(); render(); show('app');
+}
+function bulkInfo() {
+  const n = Object.keys(S.edits).length;
+  $('bulkInfo').textContent = n ? `${n} price${n > 1 ? 's' : ''} changed` : 'Type new prices, then Save all';
+  $('bulkSave').disabled = !n;
+}
+async function bulkSave() {
+  const changes = Object.keys(S.edits).map(id => {
+    const it = S.items.find(i => i.ID === id);
+    return { ID: id, base: it.UpdatedAt || '', PriceLKR: String(S.edits[id]).replace(/[, ]|rs\.?/gi, '') };
+  });
+  const bad = changes.find(c => c.PriceLKR !== '' && !(Number(c.PriceLKR) >= 0));
+  if (bad) return toast('Check the price for ' + S.items.find(i => i.ID === bad.ID).Model, true);
+  const b = $('bulkSave'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Saving…';
+  try {
+    const r = await call('bulk', { changes });
+    r.saved.forEach(x => { const it = S.items.find(i => i.ID === x.ID); if (it) Object.assign(it, x); });
+    if (r.skipped.length) toast(`${r.saved.length} saved. Not saved: ` + r.skipped.map(s => `${s.model || s.ID} (${s.why})`).join('; '), true);
+    else toast(`${r.saved.length} price${r.saved.length === 1 ? '' : 's'} saved`);
+    setBulk(false); load(true);
+  } catch (e) { toast(e.message, true); }
+  finally { b.textContent = 'Save all'; bulkInfo(); }
+}
+
+/* ---------------- sync from the SLD tool ---------------- */
+function parseSld(text) {
+  const m = text.match(/SLD_INVERTERS\s*=\s*(\[[\s\S]*?\n\s*\]);?/) || text.match(/SLD_INVERTERS\s*=\s*(\[[\s\S]*?\])\s*;/);
+  let arr;
+  try { arr = JSON.parse(m ? m[1] : text); } catch (e) { throw new Error('Could not read the SLD inverter list from this file'); }
+  if (!Array.isArray(arr) || !arr.length || !arr[0].brand) throw new Error('This file has no SLD inverter list');
+  const kwOf = (mo, I) => { const r = mo.match(/(\d+(?:\.\d+)?)\s*K/) || mo.match(/(?:SG|HPS-|planet\s)(\d+(?:\.\d+)?)/i); return r ? +r[1] : (I ? +(I * 0.6928).toFixed(1) : ''); };
+  return arr.map(e => ({ brand: String(e.brand).trim(), model: String(e.model).trim(),
+    category: /BESS/i.test(e.brand) ? 'BESS' : e.type === 'hybrid' ? 'Hybrid' : 'On-grid',
+    phase: e.phase == 1 ? 1 : 3, kw: e.kw ? +e.kw : kwOf(String(e.model), +e.current) }));
+}
+async function syncSld(models, from) {
+  const have = new Set(S.items.map(i => (i.Brand + '|' + i.Model).toLowerCase()));
+  const fresh = models.filter(m => !have.has((m.brand + '|' + m.model).toLowerCase()));
+  if (!fresh.length) return toast(`All ${models.length} SLD tool models are already in the list`);
+  const names = fresh.slice(0, 12).map(m => `<li>${esc(m.brand)} — ${esc(m.model)}</li>`).join('') + (fresh.length > 12 ? `<li>…and ${fresh.length - 12} more</li>` : '');
+  openDlg(`<div class="dh"><h3>Sync from SLD tool<small>${esc(from)}</small></h3><button class="x" aria-label="Close">×</button></div>
+    <div class="db"><p><b>${fresh.length}</b> new model${fresh.length > 1 ? 's' : ''} found in the SLD tool (out of ${models.length}). They will be added without a price. Existing models and prices are not changed.</p><ul>${names}</ul></div>
+    <div class="df"><button class="btn sec" id="cancelBtn">Cancel</button><button class="btn" id="saveBtn">Add ${fresh.length}</button></div>`);
+  $('cancelBtn').onclick = closeDlg;
+  $('saveBtn').onclick = async () => {
+    const b = $('saveBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Adding…';
+    try { const r = await call('sync', { models: fresh }); closeDlg(); toast(`${r.added.length} model${r.added.length === 1 ? '' : 's'} added from the SLD tool`); load(); }
+    catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Add'; }
+  };
+}
+async function syncClick() {
+  const b = $('syncBtn'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Reading SLD tool…';
+  try {
+    const seen = new Set(), models = [];
+    for (const url of SLD_SOURCES) {
+      try {
+        const res = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) continue;
+        parseSld(await res.text()).forEach(m => { const k = (m.brand + '|' + m.model).toLowerCase(); if (!seen.has(k)) { seen.add(k); models.push(m); } });
+      } catch (e) { /* try the next file */ }
+    }
+    if (models.length) await syncSld(models, 'Read from the SLD tool on this site');
+    else if (confirm('The SLD tool list could not be loaded from this site (' + SLD_SOURCES[0] + ').\n\nChoose the SLD tool\'s "inverter-data.js" or "index.html" file from your computer instead?')) $('sldFile').click();
+  } finally { b.disabled = false; b.textContent = '⇄ Sync from SLD tool'; }
+}
+$('sldFile').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { await syncSld(parseSld(await f.text()), 'From file ' + f.name); } catch (err) { toast(err.message, true); }
+};
+
+/* ---------------- export ---------------- */
+const exportRows = () => (S.shown || []).filter(i => i.Active || isProc());
+function csvClick() {
+  const rows = exportRows(); if (!rows.length) return toast('Nothing to export', true);
+  const q = v => { const s = String(v === undefined || v === null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const head = ['Brand', 'Model', 'Type', 'Phase', 'kW', 'Price (LKR)', 'Supplier', 'Stock', 'Valid until', 'Remarks', 'Last updated', 'Updated by'];
+  const lines = [['Regen Renewables (Pvt) Ltd. — Inverter price list'], ['Exported ' + fmtDate(new Date().toISOString()) + ' by ' + S.user.name], [S.note], [], head]
+    .concat(rows.map(i => [i.Brand, i.Model, i.Category, i.Phase == 1 ? '1-phase' : '3-phase', i.kW, i.PriceLKR, i.Supplier, i.Stock, i.ValidUntil, i.Remarks, i.UpdatedAt ? fmtDate(i.UpdatedAt) : '', i.UpdatedBy]))
+    .concat([[], [notice()]]);
+  const blob = new Blob(['﻿' + lines.map(r => r.map(q).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Regen_Inverter_Prices_${today()}.csv`;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function printClick() {
+  const rows = exportRows(); if (!rows.length) return toast('Nothing to print', true);
+  $('printArea').innerHTML = `<h2 style="margin:0">Regen Renewables (Pvt) Ltd. — Inverter price list</h2>
+    <p style="margin:2px 0 8px">${esc(fmtDate(new Date().toISOString()))} · ${esc(S.user.name)} · ${esc(S.note)}</p>
+    <table><thead><tr><th>Brand</th><th>Model</th><th>Type</th><th>Ph</th><th>kW</th><th>Price (LKR)</th><th>Supplier</th><th>Stock</th><th>Valid until</th><th>Updated</th></tr></thead><tbody>
+    ${rows.map(i => `<tr><td>${esc(i.Brand)}</td><td>${esc(i.Model)}</td><td>${esc(i.Category)}</td><td>${i.Phase == 1 ? '1' : '3'}</td><td class="n">${esc(i.kW)}</td><td class="n">${i.PriceLKR === '' ? '' : esc(Number(i.PriceLKR).toLocaleString('en-US'))}</td><td>${esc(i.Supplier)}</td><td>${esc(i.Stock)}</td><td>${esc(i.ValidUntil)}</td><td>${i.UpdatedAt ? esc(fmtDate(i.UpdatedAt).slice(0, 11)) : ''}</td></tr>`).join('')}
+    </tbody></table><p class="pn">${esc(notice())}</p>`;
+  window.print();
+}
+
+/* ---------------- recent changes ---------------- */
+function renderRecent() {
+  const kind = $('rKind').value;
+  const rows = S.recent.filter(h => kind === 'all' || h.Field === 'PriceLKR' || (h.Field === 'Added' && h.New !== ''));
+  if (!rows.length) { $('recent').innerHTML = '<div class="empty">No changes yet.</div>'; return; }
+  let last = '', html = '';
+  rows.forEach(h => {
+    const d = new Date(h.Time).toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Colombo' });
+    if (d !== last) { html += `<div class="day">${esc(d)}</div>`; last = d; }
+    const t = new Date(h.Time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Colombo' });
+    html += `<div class="ch" data-id="${esc(h.ID)}">${histText(h)}<br><small>${esc(t)} · ${esc(h.By)}</small></div>`;
+  });
+  $('recent').innerHTML = html;
+}
+
+/* ---------------- events ---------------- */
+$('tabs').onclick = e => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  S.tab = t.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t));
+  show('app'); render();
+};
+$('refreshBtn').onclick = () => load();
+$('menuBtn').onclick = () => {
+  openDlg(`<div class="dh"><h3>${esc(S.user.name)}<small>${esc(S.user.team)} · ${isProc() ? 'can edit prices' : 'view only'}</small></h3><button class="x" aria-label="Close">×</button></div>
+    <div class="db"><p class="hint">Prices come live from the team's Google Sheet. Server:<br><code style="word-break:break-all">${esc(S.api)}</code></p></div>
+    <div class="df"><button class="btn red" id="outBtn">Sign out</button><button class="btn sec" id="cancelBtn">Close</button></div>`);
+  $('cancelBtn').onclick = closeDlg;
+  $('outBtn').onclick = () => { closeDlg(); signOut(); };
+};
+$('stats').onclick = e => { const b = e.target.closest('.stat'); if (!b) return; S.filter = S.filter === b.dataset.f ? '' : b.dataset.f; render(); };
+let qT; $('q').oninput = () => { clearTimeout(qT); qT = setTimeout(render, 120); };
+['fBrand', 'fCat', 'fPhase', 'fSort'].forEach(id => $(id).onchange = () => {
+  store.set(LS.filt, { fBrand: $('fBrand').value, fCat: $('fCat').value, fPhase: $('fPhase').value, fSort: $('fSort').value }); render();
+});
+$('showHidden').onchange = render;
+$('rKind').onchange = renderRecent;
+$('list').addEventListener('click', e => {
+  const gh = e.target.closest('.ghead');
+  if (gh) { const g = gh.parentElement, o = store.get(LS.open, {}); g.classList.toggle('closed'); o[g.dataset.brand] = !g.classList.contains('closed'); store.set(LS.open, o); return; }
+  if (S.bulk) return;
+  const r = e.target.closest('.row'); if (r) openItem(r.dataset.id);
+});
+$('list').addEventListener('input', e => {
+  const i = e.target.closest('.pinput'); if (!i) return;
+  const it = S.items.find(x => x.ID === i.dataset.id), v = i.value.trim().replace(/[, ]|rs\.?/gi, '');
+  const orig = it.PriceLKR === '' ? '' : String(it.PriceLKR);
+  if (v === orig || (v !== '' && orig !== '' && Number(v) === Number(orig))) delete S.edits[it.ID]; else S.edits[it.ID] = i.value.trim();
+  i.classList.toggle('chg', S.edits[it.ID] !== undefined); bulkInfo();
+});
+$('list').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || !e.target.classList.contains('pinput')) return;
+  e.preventDefault(); const all = [...document.querySelectorAll('.pinput')], n = all[all.indexOf(e.target) + 1]; if (n) n.focus();
+});
+$('recent').onclick = e => { const c = e.target.closest('.ch'); if (c && c.dataset.id && S.items.some(i => i.ID === c.dataset.id)) openItem(c.dataset.id); };
+$('addBtn').onclick = openAdd;
+$('bulkBtn').onclick = () => { if (S.bulk && Object.keys(S.edits).length && !confirm('Discard the prices you typed?')) return; setBulk(!S.bulk); };
+$('bulkCancel').onclick = () => { if (Object.keys(S.edits).length && !confirm('Discard the prices you typed?')) return; setBulk(false); };
+$('bulkSave').onclick = bulkSave;
+$('syncBtn').onclick = syncClick;
+$('csvBtn').onclick = csvClick;
+$('printBtn').onclick = printClick;
+$('noteEdit').onclick = () => {
+  openDlg(`<div class="dh"><h3>Price note<small>Shown to everyone above the list</small></h3><button class="x" aria-label="Close">×</button></div>
+    <div class="db form"><label class="full">Note<textarea id="noteIn" maxlength="300">${esc(S.note)}</textarea></label></div>
+    <div class="df"><button class="btn sec" id="cancelBtn">Cancel</button><button class="btn" id="saveBtn">Save</button></div>`);
+  $('cancelBtn').onclick = closeDlg;
+  $('saveBtn').onclick = async () => {
+    try { const r = await call('note', { text: $('noteIn').value }); S.note = r.note; closeDlg(); render(); toast('Note saved'); } catch (e) { toast(e.message, true); }
+  };
+};
+window.addEventListener('beforeunload', e => { if (S.bulk && Object.keys(S.edits).length) { e.preventDefault(); e.returnValue = ''; } });
+// keep the list fresh for everyone
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.user && !S.bulk && !dlg.open) load(true); });
+setInterval(() => { if (!document.hidden && S.user && !S.bulk && !dlg.open) load(true); }, 120000);
+
+/* ---------------- start ---------------- */
+S.api = store.get(LS.api, '') || API_URL_DEFAULT;
+S.auth = store.get(LS.auth, null);
+if (S.auth && S.auth.key && S.api) startApp(); else show('login');
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => {}));
+</script>
+</body>
+</html>
